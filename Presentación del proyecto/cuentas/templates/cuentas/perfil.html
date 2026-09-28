@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block titulo %}Mi perfil{% endblock %}
+{% block contenido %}
+    <h1>Mi perfil</h1>
+    <span class="etiqueta">{{ perfil.get_tipo_usuario_display }}</span>
+
+    <div style="margin-top:20px;">
+        <div class="dato"><strong>Usuario:</strong> {{ user.username }}</div>
+        <div class="dato"><strong>Nombre completo:</strong> {{ user.first_name }} {{ user.last_name }}</div>
+        <div class="dato"><strong>Correo electrónico:</strong> {{ user.email|default:"—" }}</div>
+        <div class="dato"><strong>Teléfono:</strong> {{ perfil.telefono|default:"—" }}</div>
+        <div class="dato"><strong>Miembro desde:</strong> {{ user.date_joined|date:"d/m/Y" }}</div>
+    </div>
+
+    <a class="btn" href="{% url 'cuentas:perfil_editar' %}">Modificar mis datos</a>
+
+    {% if perfil.tipo_usuario == "arrendador" %}
+        <h2 style="margin-top:32px;">Mis inmuebles publicados</h2>
+        <a class="btn" href="{% url 'inmuebles:crear' %}">+ Publicar nuevo inmueble</a>
+        <a class="btn btn-secundario" href="{% url 'inmuebles:mis_arriendos' %}">Ver arriendos de mis inmuebles</a>
+        {% if inmuebles %}
+            <div class="tabla-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Tipo</th>
+                            <th>Comuna</th>
+                            <th>Región</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for inmueble in inmuebles %}
+                            <tr>
+                                <td>{{ inmueble.nombre }}</td>
+                                <td>{{ inmueble.tipo.nombre }}</td>
+                                <td>{{ inmueble.comuna.nombre }}</td>
+                                <td>{{ inmueble.comuna.region.nombre }}</td>
+                                <td>
+                                    {% if inmueble.disponible %}
+                                        <span class="etiqueta">Disponible</span>
+                                    {% else %}
+                                        <span class="etiqueta etiqueta-gris">Arrendado</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'inmuebles:editar' inmueble.pk %}">Editar</a> ·
+                                    <a href="{% url 'inmuebles:eliminar' inmueble.pk %}">Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p>Aún no tienes inmuebles publicados asociados a tu usuario.</p>
+        {% endif %}
+    {% else %}
+        <h2 style="margin-top:32px;">Arrendar un inmueble</h2>
+        <p>Busca entre los inmuebles publicados, filtra por región y comuna, y arrienda el que necesites.</p>
+        <a class="btn" href="{% url 'inmuebles:listar' %}">Ver inmuebles disponibles</a>
+        <a class="btn btn-secundario" href="{% url 'inmuebles:mis_arriendos' %}">Mis arriendos</a>
+    {% endif %}
+{% endblock %}

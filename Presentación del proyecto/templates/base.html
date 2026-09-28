@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Arriendos{% endblock %}</title>
+    <style>
+        :root {
+            --verde: #7ab648;
+            --verde-oscuro: #5c9236;
+            --gris-texto: #333;
+            --gris-claro: #f4f4f4;
+            --borde: #ddd;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            margin: 0;
+            background: var(--gris-claro);
+            color: var(--gris-texto);
+        }
+        header {
+            background: #fff;
+            border-bottom: 3px solid var(--verde);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        header .logo {
+            font-weight: bold;
+            font-size: 1.25rem;
+            color: var(--verde-oscuro);
+            text-decoration: none;
+        }
+        nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; }
+        nav a {
+            text-decoration: none;
+            color: var(--gris-texto);
+            font-size: 0.95rem;
+        }
+        nav a:hover { color: var(--verde-oscuro); }
+        main {
+            max-width: 960px;
+            margin: 32px auto;
+            background: #fff;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+        }
+        h1 { color: var(--verde-oscuro); margin-top: 0; }
+        h2 { color: var(--verde-oscuro); font-size: 1.15rem; }
+        label { display: block; margin-top: 14px; font-weight: 600; font-size: 0.9rem; }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px 10px;
+            margin-top: 4px;
+            border: 1px solid var(--borde);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            font-family: inherit;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            background: var(--verde);
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .btn:hover { background: var(--verde-oscuro); }
+        .btn-secundario {
+            background: #fff;
+            color: var(--verde-oscuro);
+            border: 1px solid var(--verde);
+        }
+        .btn-secundario:hover { background: #eaf5df; }
+        .btn-sm { margin-top: 0; padding: 5px 12px; font-size: 0.85rem; }
+        .mensajes { list-style: none; padding: 0; margin: 0 0 16px 0; }
+        .mensajes li {
+            background: #eaf5df;
+            border-left: 4px solid var(--verde);
+            padding: 10px 14px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+        }
+        .errorlist { color: #b00020; padding-left: 18px; font-size: 0.85rem; }
+        .tabla-scroll { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--borde); font-size: 0.9rem; vertical-align: top; }
+        .etiqueta {
+            display: inline-block;
+            background: var(--verde);
+            color: #fff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+        }
+        .etiqueta-gris { background: #888; }
+        .dato { margin: 8px 0; }
+        .dato strong { display: inline-block; min-width: 140px; }
+        .filtros {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 12px;
+            align-items: end;
+            margin-bottom: 8px;
+        }
+        .filtros label { margin-top: 0; }
+        .filtros .btn { margin-top: 0; }
+        .acciones-filtro { display: flex; gap: 8px; align-items: center; }
+        .resumen { color: #666; font-size: 0.9rem; margin: 4px 0 0 0; }
+        .en-linea { display: inline; }
+
+        /* Responsive: en pantallas angostas (celular) el contenido ocupa todo el ancho. */
+        @media (max-width: 640px) {
+            header { padding: 12px 16px; }
+            main { margin: 12px; padding: 18px; }
+            .filtros { grid-template-columns: 1fr; }
+            .dato strong { display: block; min-width: 0; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="logo" href="{% url 'inicio' %}">{desafío} arriendos</a>
+        <nav>
+            {% if user.is_authenticated %}
+                <a href="{% url 'inmuebles:listar' %}">Inmuebles disponibles</a>
+                <a href="{% url 'inmuebles:mis_arriendos' %}">Mis arriendos</a>
+                <a href="{% url 'cuentas:perfil' %}">Mi perfil</a>
+                <a href="{% url 'cuentas:perfil_editar' %}">Editar datos</a>
+                <form action="{% url 'cuentas:logout' %}" method="post" class="en-linea">
+                    {% csrf_token %}
+                    <a href="#" onclick="this.closest('form').submit(); return false;">Cerrar sesión</a>
+                </form>
+            {% else %}
+                <a href="{% url 'cuentas:login' %}">Iniciar sesión</a>
+                <a href="{% url 'cuentas:registro' %}">Registrarse</a>
+            {% endif %}
+        </nav>
+    </header>
+    <main>
+        {% if messages %}
+            <ul class="mensajes">
+                {% for mensaje in messages %}
+                    <li>{{ mensaje }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block contenido %}{% endblock %}
+    </main>
+</body>
+</html>

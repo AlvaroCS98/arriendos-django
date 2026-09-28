@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block titulo %}{% if modo == "editar" %}Editar inmueble{% else %}Nuevo inmueble{% endif %}{% endblock %}
+{% block contenido %}
+    <h1>{% if modo == "editar" %}Editar "{{ inmueble.nombre }}"{% else %}Publicar nuevo inmueble{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {% for campo in form %}
+            <label for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+            {{ campo }}
+            {% if campo.errors %}
+                <ul class="errorlist">
+                    {% for error in campo.errors %}<li>{{ error }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        {% endfor %}
+        <button class="btn" type="submit">
+            {% if modo == "editar" %}Guardar cambios{% else %}Publicar inmueble{% endif %}
+        </button>
+        <a class="btn btn-secundario" href="{% url 'cuentas:perfil' %}">Cancelar</a>
+    </form>
+{% endblock %}

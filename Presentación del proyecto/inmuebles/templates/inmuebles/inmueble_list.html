@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block titulo %}Inmuebles disponibles{% endblock %}
+{% block contenido %}
+    <h1>Inmuebles disponibles para arriendo</h1>
+
+    <form method="get" class="filtros">
+        <div>
+            <label for="region">Filtrar por región</label>
+            <select name="region" id="region" onchange="this.form.elements['comuna'].value=''; this.form.submit();">
+                <option value="">Todas las regiones</option>
+                {% for region in regiones %}
+                    <option value="{{ region.id }}" {% if region.id == region_seleccionada %}selected{% endif %}>
+                        {{ region.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="comuna">Filtrar por comuna</label>
+            <select name="comuna" id="comuna" onchange="this.form.submit();">
+                <option value="">Todas las comunas</option>
+                {% for comuna in comunas %}
+                    <option value="{{ comuna.id }}" {% if comuna.id == comuna_seleccionada %}selected{% endif %}>
+                        {{ comuna.nombre }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="acciones-filtro">
+            <button type="submit" class="btn btn-sm">Filtrar</button>
+            <a class="btn btn-sm btn-secundario" href="{% url 'inmuebles:listar' %}">Limpiar</a>
+        </div>
+    </form>
+
+    <p class="resumen">{{ inmuebles|length }} inmueble{{ inmuebles|length|pluralize }} encontrado{{ inmuebles|length|pluralize }}.</p>
+
+    {% if inmuebles %}
+        <div class="tabla-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Tipo</th>
+                        <th>Comuna</th>
+                        <th>Región</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for inmueble in inmuebles %}
+                        <tr>
+                            <td>{{ inmueble.nombre }}</td>
+                            <td>{{ inmueble.descripcion }}</td>
+                            <td>{{ inmueble.tipo.nombre }}</td>
+                            <td>{{ inmueble.comuna.nombre }}</td>
+                            <td>{{ inmueble.comuna.region.nombre }}</td>
+                            <td>
+                                {% if inmueble.disponible %}
+                                    {% if puede_arrendar %}
+                                        <form method="post" action="{% url 'inmuebles:arrendar' inmueble.pk %}" class="en-linea">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-sm">Arrendar</button>
+                                        </form>
+                                    {% else %}
+                                        <span class="etiqueta">Disponible</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="etiqueta etiqueta-gris">Arrendado</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p>No hay inmuebles que coincidan con los filtros seleccionados.</p>
+    {% endif %}
+{% endblock %}

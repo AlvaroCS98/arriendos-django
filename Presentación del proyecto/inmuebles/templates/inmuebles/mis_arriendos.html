@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block titulo %}Mis arriendos{% endblock %}
+{% block contenido %}
+    <h1>{% if es_arrendador %}Arriendos de mis inmuebles{% else %}Mis arriendos{% endif %}</h1>
+
+    {% if arriendos %}
+        <div class="tabla-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Inmueble</th>
+                        {% if es_arrendador %}
+                            <th>Arrendatario</th>
+                        {% else %}
+                            <th>Propietario</th>
+                        {% endif %}
+                        <th>Desde</th>
+                        <th>Hasta</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for arriendo in arriendos %}
+                        <tr>
+                            <td>
+                                {{ arriendo.inmueble.nombre }}<br>
+                                <small>{{ arriendo.inmueble.comuna.nombre }}, {{ arriendo.inmueble.comuna.region.nombre }}</small>
+                            </td>
+                            <td>
+                                {% if es_arrendador %}
+                                    {{ arriendo.arrendatario.get_full_name|default:arriendo.arrendatario.username }}<br>
+                                    <small>{{ arriendo.arrendatario.email|default:"—" }}</small>
+                                {% else %}
+                                    {{ arriendo.inmueble.propietario.get_full_name|default:arriendo.inmueble.propietario.username }}<br>
+                                    <small>{{ arriendo.inmueble.propietario.email|default:"—" }}</small>
+                                {% endif %}
+                            </td>
+                            <td>{{ arriendo.fecha_inicio|date:"d/m/Y" }}</td>
+                            <td>{{ arriendo.fecha_termino|date:"d/m/Y"|default:"—" }}</td>
+                            <td>
+                                {% if arriendo.estado == "VIGENTE" %}
+                                    <span class="etiqueta">Vigente</span>
+                                {% else %}
+                                    <span class="etiqueta etiqueta-gris">Terminado</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if arriendo.estado == "VIGENTE" %}
+                                    <form method="post" action="{% url 'inmuebles:terminar_arriendo' arriendo.pk %}" class="en-linea">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-secundario">Terminar arriendo</button>
+                                    </form>
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        {% if es_arrendador %}
+            <p>Aún nadie arrienda tus inmuebles.</p>
+        {% else %}
+            <p>Todavía no has arrendado ningún inmueble.</p>
+            <a class="btn" href="{% url 'inmuebles:listar' %}">Ver inmuebles disponibles</a>
+        {% endif %}
+    {% endif %}
+{% endblock %}

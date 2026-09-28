@@ -1,0 +1,40 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: arriendos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      # Volumen con nombre: los datos persisten entre reinicios sin ensuciar la carpeta del proyecto.
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d arriendos"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  web:
+    build: .
+    # 1) crea las tablas, 2) carga regiones/comunas y usuarios de demo, 3) levanta el servidor.
+    command: sh -c "python manage.py migrate --noinput && python manage.py cargar_datos_demo && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8001:8000"
+    environment:
+      DJANGO_SECRET_KEY: clave-desarrollo-hito5
+      DJANGO_DEBUG: "True"
+      POSTGRES_DB: arriendos
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: db          # nombre del servicio, NO localhost
+      POSTGRES_PORT: "5432"      # puerto interno de la red de Docker
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

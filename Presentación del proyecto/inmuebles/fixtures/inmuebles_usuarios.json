@@ -1,0 +1,19 @@
+[
+  {"model": "auth.user", "pk": 1, "fields": {"username": "propietario1", "password": "!", "is_active": true, "is_staff": false, "is_superuser": false}},
+  {"model": "auth.user", "pk": 2, "fields": {"username": "propietario2", "password": "!", "is_active": true, "is_staff": false, "is_superuser": false}},
+  {"model": "auth.user", "pk": 3, "fields": {"username": "propietario3", "password": "!", "is_active": true, "is_staff": false, "is_superuser": false}},
+
+  {"model": "inmuebles.inmueble", "pk": 1, "fields": {"nombre": "Casa Los Aromos", "descripcion": "Casa de 3 dormitorios con patio amplio, cerca del centro.", "comuna": 131, "tipo": 1, "propietario": 1}},
+  {"model": "inmuebles.inmueble", "pk": 2, "fields": {"nombre": "Depto Torre Central", "descripcion": "Departamento de 2 dormitorios, edificio con piscina y gimnasio.", "comuna": 131, "tipo": 2, "propietario": 2}},
+  {"model": "inmuebles.inmueble", "pk": 3, "fields": {"nombre": "Oficina Providencia Norte", "descripcion": "Oficina amoblada, ideal para equipos pequeños, cerca del metro.", "comuna": 118, "tipo": 3, "propietario": 1}},
+  {"model": "inmuebles.inmueble", "pk": 4, "fields": {"nombre": "Local Ñuñoa Plaza", "descripcion": "Local comercial en esquina de alto tránsito peatonal.", "comuna": 111, "tipo": 4, "propietario": 3}},
+  {"model": "inmuebles.inmueble", "pk": 5, "fields": {"nombre": "Depto Las Condes Vista", "descripcion": "Departamento con vista a la cordillera, 1 dormitorio.", "comuna": 103, "tipo": 2, "propietario": 2}},
+
+  {"model": "inmuebles.inmueble", "pk": 6, "fields": {"nombre": "Casa Cerro Alegre", "descripcion": "Casa patrimonial remodelada, cerca de los ascensores.", "comuna": 79, "tipo": 1, "propietario": 1}},
+  {"model": "inmuebles.inmueble", "pk": 7, "fields": {"nombre": "Depto Frente al Mar", "descripcion": "Departamento con vista al mar, 2 dormitorios, estacionamiento.", "comuna": 81, "tipo": 2, "propietario": 3}},
+
+  {"model": "inmuebles.inmueble", "pk": 8, "fields": {"nombre": "Parcela Valle Verde", "descripcion": "Parcela de agrado con casa principal y quincho.", "comuna": 36, "tipo": 5, "propietario": 2}},
+
+  {"model": "inmuebles.inmueble", "pk": 9, "fields": {"nombre": "Casa Barrio Universitario", "descripcion": "Casa de 4 dormitorios cerca de universidades, ideal grupo.", "comuna": 225, "tipo": 1, "propietario": 3}},
+  {"model": "inmuebles.inmueble", "pk": 10, "fields": {"nombre": "Oficina Centro Concepción", "descripcion": "Oficina en edificio corporativo, sala de reuniones incluida.", "comuna": 225, "tipo": 3, "propietario": 1}}
+]
