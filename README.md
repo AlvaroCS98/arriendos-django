@@ -10,13 +10,13 @@ Aplicación web desarrollada con **Django** y **PostgreSQL** para publicar, busc
 - Filtros de inmuebles por **región** y **comuna**.
 - Flujo de arriendo que mantiene actualizada la disponibilidad de cada inmueble.
 - Restricciones y transacciones a nivel de base de datos para evitar arriendos duplicados.
-- Comandos de gestión para generar reportes.
+- Comandos de gestión para generar reportes (`reporte_regiones` y `reporte_comunas`).
 - Pruebas automatizadas.
 
 ## Tecnologías
 
 - Python y Django
-- PostgreSQL
+- PostgreSQL 16
 - HTML, CSS y Bootstrap 5
 - Docker y Docker Compose
 
@@ -28,46 +28,47 @@ Regiones, comunas, tipos de inmueble, inmuebles, arriendos y perfiles, en un mod
 
 Requisitos: tener instalados [Docker](https://www.docker.com/) y Docker Compose.
 
-1. Clonar el repositorio:
+1. Clonar el repositorio y entrar a la carpeta del proyecto:
    ```bash
    git clone https://github.com/AlvaroCS98/arriendos-django.git
-   cd arriendos-django
+   cd "arriendos-django/Presentación del proyecto"
    ```
-2. Crear el archivo de variables de entorno (**COMPLETAR**: copiar tu `.env.example` o indicar las variables necesarias):
-   ```bash
-   cp .env.example .env
-   ```
-3. Levantar los servicios (**COMPLETAR** si tu comando es distinto):
+2. Levantar los servicios. Al iniciar, se crean las tablas, se cargan regiones, comunas y usuarios de demostración, y se levanta el servidor:
    ```bash
    docker compose up --build
    ```
-4. Abrir en el navegador: http://localhost:8000 (**COMPLETAR** si usas otro puerto).
+3. Abrir en el navegador: http://localhost:8001
 
 ## Usuarios de demostración
 
 > Credenciales de prueba, solo para uso local.
 
-| Rol          | Usuario        | Contraseña     |
-| ------------ | -------------- | -------------- |
-| Arrendador   | **COMPLETAR**  | **COMPLETAR**  |
-| Arrendatario | **COMPLETAR**  | **COMPLETAR**  |
+| Rol          | Usuario                        | Contraseña   |
+| ------------ | ------------------------------ | ------------ |
+| Arrendador   | `arrendador1` / `arrendador2`  | `Demo12345!` |
+| Arrendatario | `arrendatario1` / `arrendatario2` | `Demo12345!` |
 
-## Pruebas
+## Reportes y pruebas
+
+Con los servicios levantados, en otra terminal y dentro de la misma carpeta:
 
 ```bash
+docker compose exec web python manage.py reporte_regiones
+docker compose exec web python manage.py reporte_comunas
 docker compose exec web python manage.py test
 ```
-(**COMPLETAR** con el nombre real de tu servicio si no es `web`.)
 
 ## Capturas de pantalla
 
-<!-- COMPLETAR: reemplazar por los nombres reales de los archivos de la carpeta evidencias -->
-![Listado de inmuebles](evidencias/NOMBRE_DE_LA_CAPTURA.png)
-![Perfil de usuario](evidencias/NOMBRE_DE_LA_CAPTURA.png)
+![Nuevo inmueble](Presentaci%C3%B3n%20del%20proyecto/evidencias/Nuevo%20inmueble.png)
+![Editando inmueble](Presentaci%C3%B3n%20del%20proyecto/evidencias/Editando%20inmueble.png)
+![Inmueble editado](Presentaci%C3%B3n%20del%20proyecto/evidencias/Inmueble%20editado.png)
+![Perfil de arrendador](Presentaci%C3%B3n%20del%20proyecto/evidencias/Perfil%20de%20arrendador.png)
 
 ## Seguridad
 
-- El modo de depuración debe estar desactivado y la `SECRET_KEY` en variables de entorno al publicar.
+- La configuración incluida (`compose.yaml`) es **solo para desarrollo local**: usa modo depuración y una clave de ejemplo.
+- Al publicar, el modo de depuración debe estar desactivado y la `SECRET_KEY` debe ir en variables de entorno.
 - Las credenciales de demostración son solo para pruebas locales.
 
 ## Mejoras a futuro
@@ -81,4 +82,3 @@ docker compose exec web python manage.py test
 
 - GitHub: [AlvaroCS98](https://github.com/AlvaroCS98)
 - LinkedIn: [Álvaro Catalán](https://www.linkedin.com/in/%C3%A1lvaro-catal%C3%A1n-972547405/)
-- Correo: alvarocatalans98@gmail.com
